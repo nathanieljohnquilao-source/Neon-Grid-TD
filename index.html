@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#04060f">
+  <title>NEON GRID — Tower Defense</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ═══════════════════ TITLE ════════════════════════════════════════════ -->
+  <div id="screen-title" class="screen active">
+    <canvas id="title-canvas"></canvas>
+    <div class="title-content">
+      <div class="title-eyebrow">TOWER DEFENSE</div>
+      <h1 class="title-logo">
+        <span class="t-neon">NEON</span><span class="t-grid">GRID</span>
+      </h1>
+      <p class="title-sub">Build towers. Survive the waves.<br>Protect the core at all costs.</p>
+      <button class="btn-cta" id="btn-play">▶ &nbsp;START GAME</button>
+      <div id="title-best" class="title-best"></div>
+      <div class="title-hints">
+        <div class="hint-row"><kbd>TAP / CLICK</kbd> empty cell — place tower</div>
+        <div class="hint-row"><kbd>TAP / CLICK</kbd> placed tower — upgrade / sell</div>
+        <div class="hint-row"><kbd>SEND WAVE</kbd> early for bonus credits</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ GAME ═════════════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+
+    <!-- HUD -->
+    <div id="hud">
+      <div class="hud-left">
+        <div class="hud-item">
+          <span class="hud-icon icon-lives">♥</span>
+          <span class="hud-val" id="hud-lives">20</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-icon icon-credits">⬡</span>
+          <span class="hud-val" id="hud-credits">150</span>
+        </div>
+      </div>
+      <div class="hud-center">
+        <div class="hud-wave-label">WAVE</div>
+        <div class="hud-wave-num" id="hud-wave">—</div>
+        <div class="wave-prog-wrap"><div id="wave-prog" class="wave-prog-bar"></div></div>
+      </div>
+      <div class="hud-right">
+        <div class="hud-item">
+          <span class="hud-icon icon-score">★</span>
+          <span class="hud-val score-val" id="hud-score">0</span>
+        </div>
+        <button id="btn-speed" class="speed-btn">1×</button>
+      </div>
+    </div>
+
+    <!-- Boss HP bar -->
+    <div id="boss-bar" class="boss-bar hidden">
+      <span class="boss-bar-label">⚠ BOSS</span>
+      <div class="boss-bar-track"><div id="boss-bar-fill" class="boss-bar-fill"></div></div>
+      <span id="boss-hp-text" class="boss-hp-text"></span>
+    </div>
+
+    <!-- Game canvas -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Wave announcement banner -->
+    <div id="wave-banner" class="wave-banner hidden"></div>
+
+    <!-- Kill streak toast -->
+    <div id="streak-toast" class="streak-toast hidden"></div>
+
+    <!-- Tower info popup -->
+    <div id="tower-popup" class="popup hidden">
+      <div class="popup-header">
+        <div class="popup-title-row">
+          <span id="pop-title" class="pop-name">TOWER</span>
+          <span id="pop-lvl" class="pop-badge">LV 1</span>
+        </div>
+        <button id="pop-close" class="pop-x">✕</button>
+      </div>
+      <div id="pop-stats" class="popup-stats"></div>
+      <div class="popup-btns">
+        <button id="pop-upgrade" class="pop-btn pop-up">⬆ UPGRADE</button>
+        <button id="pop-sell"    class="pop-btn pop-sell-btn">⬡ SELL</button>
+      </div>
+    </div>
+
+    <!-- Shop bar -->
+    <div id="shop">
+      <div class="shop-row" id="shop-row">
+        <div class="shop-item selected" data-tower="gun">
+          <div class="si-icon gun-c">◈</div>
+          <div class="si-name">GUN</div>
+          <div class="si-cost">⬡50</div>
+        </div>
+        <div class="shop-item" data-tower="laser">
+          <div class="si-icon laser-c">⬟</div>
+          <div class="si-name">LASER</div>
+          <div class="si-cost">⬡80</div>
+        </div>
+        <div class="shop-item" data-tower="slow">
+          <div class="si-icon slow-c">◉</div>
+          <div class="si-name">SLOW</div>
+          <div class="si-cost">⬡60</div>
+        </div>
+        <div class="shop-item" data-tower="missile">
+          <div class="si-icon missile-c">◆</div>
+          <div class="si-name">MISSILE</div>
+          <div class="si-cost">⬡120</div>
+        </div>
+        <div class="shop-item" data-tower="tesla">
+          <div class="si-icon tesla-c">⚡</div>
+          <div class="si-name">TESLA</div>
+          <div class="si-cost">⬡150</div>
+        </div>
+      </div>
+      <button id="btn-wave" class="wave-btn">
+        <div id="wb-main">SEND WAVE</div>
+        <div class="wb-sub">+⬡25 BONUS</div>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════ GAME OVER ════════════════════════════════════════ -->
+  <div id="screen-over" class="screen">
+    <div class="over-wrap">
+      <div class="over-icon">⊗</div>
+      <h2 class="over-title">CORE BREACHED</h2>
+      <div id="over-hs" class="over-hs"></div>
+      <div id="over-grid" class="over-stats-grid"></div>
+      <div class="over-btns">
+        <button class="btn-cta"   id="btn-restart">↺ PLAY AGAIN</button>
+        <button class="btn-ghost" id="btn-menu">MENU</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
